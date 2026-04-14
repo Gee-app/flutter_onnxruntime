@@ -21,6 +21,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.StandardMethodCodec
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -185,7 +186,8 @@ class FlutterOnnxruntimePlugin : FlutterPlugin, MethodCallHandler {
     override fun onAttachedToEngine(
         @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding,
     ) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_onnxruntime")
+        val taskQueue = flutterPluginBinding.binaryMessenger.makeBackgroundTaskQueue()
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_onnxruntime", StandardMethodCodec.INSTANCE, taskQueue)
         channel.setMethodCallHandler(this)
         ortEnvironment = OrtEnvironment.getEnvironment()
     }
